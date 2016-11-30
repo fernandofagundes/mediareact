@@ -4,35 +4,31 @@ import './css/side-menu.css';
 import AutorBox from './Autor';
 import MenuEsquerdo from './componentes/MenuEsquerdo';
 import GridProgramacao from './componentes/GridProgramacao';
+import Home from './Home';
 
 class App extends Component {
 
-  constructor(){
+    constructor(){
         super();
         this.state = {lista:[],nome:'', email:'',senha:''}
 
-  }
+    }
 
-  render() {
-    return (
-        <div id="layout">
-
-            <MenuEsquerdo/>  
-            
-            <div id="main">
-                <div className="header">
-                    <h1>Cadastro de Autores</h1>
+    render() {
+        return (
+            <div id="layout">
+                <MenuEsquerdo/>
+                <div id="main">
+                    <div className="header">
+                        <h1>Bem-vindo ao sistema</h1>
+                    </div>
+                    <div className="content" id="content">
+                        {this.props.children}
+                    </div>
                 </div>
             </div>
-
-            <div className="content" id="content">
-                    <GridProgramacao/>
-            </div>
-        </div>
-          
-
-  );
-  }
+        );
+    }
 }
 
 export default App;

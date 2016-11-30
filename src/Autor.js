@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import InputCustomizado from './componentes/InputCustomizado';
 import $ from 'jquery';
 import PubSub from 'pubsub-js';
+import TratadorErros from './TratadorErros';
 
 class FormularioAutor extends Component{
 
@@ -16,14 +17,22 @@ class FormularioAutor extends Component{
 
     componentDidMount(){
         $.ajax({
-                url:"http://localhost:8080/api/autores",
-                dataType: 'json',
-                success:function(resposta){
-                    console.log("chegou a resposta");
-                    this.setState({lista:resposta});
-                }.bind(this)
+            url:"http://localhost:8080/api/autores",
+            dataType: 'json',
+            success:function(resposta){
+                console.log("chegou a resposta");
+                this.setState({lista:resposta});
+            }.bind(this),
+            error:function(resposta){
+                console.log('chegou no erro '+resposta.status);
+                if(resposta.status === 400){
+                    new TratadorErros().publicaErros(resposta.responseJSON);
+                }
+            },
+            beforeSend:function(){
+                PubSub.publish("limpa-erros",{});
             }
-        );
+        });
     }
 
     setEnviaForm(evento){
@@ -36,9 +45,16 @@ class FormularioAutor extends Component{
             data: JSON.stringify({nome:this.state.nome,email:this.state.email,senha:this.state.senha}),
             success: function(resposta){
                 PubSub.publish('atualiza-nova-lista', resposta);
+                this.setState({nome:'', email:'', senha:''});
+            }.bind(this),
+            error:function(resposta){
+                console.log('chegou no erro '+resposta.status);
+                if(resposta.status === 400){
+                    new TratadorErros().publicaErros(resposta.responseJSON);
+                }
             },
-            error: function(resposta){
-                console.log("erro");
+            beforeSend:function(){
+                PubSub.publish("limpa-erros",{});
             }
         });
     }
@@ -134,10 +150,15 @@ export default class AutorBox extends Component{
     render()
     {
         return (
-            <div>
+        <div>
+            <div id="main">
+                <div className="header"><h1>Cadastro de Autores</h1></div>
+            </div>
+            <div className="content" id="content">
                 <FormularioAutor />
                 <TabelaAutores lista={this.state.lista} />
             </div>
+        </div>
         );
     }
 }

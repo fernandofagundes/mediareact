@@ -8,7 +8,7 @@ class FormularioAutor extends Component{
 
     constructor(){
         super();
-        this.state = {nome:'', email:'',senha:''}
+        this.state = {nome:'', email:'',senha:''};
         this.setEnviaForm = this.setEnviaForm.bind(this);
         this.setNome = this.setNome.bind(this);
         this.setEmail = this.setEmail.bind(this);
@@ -20,7 +20,6 @@ class FormularioAutor extends Component{
             url:"http://localhost:8080/api/autores",
             dataType: 'json',
             success:function(resposta){
-                console.log("chegou a resposta");
                 this.setState({lista:resposta});
             }.bind(this),
             error:function(resposta){
@@ -144,7 +143,7 @@ export default class AutorBox extends Component{
 
         PubSub.subscribe('atualiza-nova-lista',function(topico, novaLista){
             this.setState({lista:novaLista});
-        }.bind(this))
+        }.bind(this));
     }
 
     render()

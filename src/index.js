@@ -5,13 +5,14 @@ import './index.css';
 import { Router, Route, browserHistory, IndexRoute} from 'react-router';
 import AutorBox from './Autor';
 import Home from './Home';
+import Livro from './Livro';
 
 ReactDOM.render((
         <Router history={browserHistory} >
             <Route path="/" component={App} >
-                <IndexRoute componet={Home} />
+                <IndexRoute component={Home} />
                 <Route path="/autor" component={AutorBox} />
-                <Route path="/livro" />
+                <Route path="/livro" component={Livro} />
             </Route>
         </Router>
     ),
